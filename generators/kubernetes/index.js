@@ -24,6 +24,7 @@ const BaseDockerGenerator = require('../generator-base-docker');
 const { checkImages, generateJwtSecret, configureImageNames, setAppsFolderPaths } = require('../docker-base');
 const { checkKubernetes, loadConfig, saveConfig, setupKubernetesConstants } = require('../kubernetes-base');
 const statistics = require('../statistics');
+const { isSupportedConfig } = require('../unsupported-configurations');
 
 module.exports = class extends BaseDockerGenerator {
     get initializing() {
@@ -59,6 +60,10 @@ module.exports = class extends BaseDockerGenerator {
 
     get configuring() {
         return {
+            checkIsSupportedConfig() {
+                isSupportedConfig(this, __dirname, 'Kubernetes')
+            },
+            
             insight() {
                 statistics.sendSubGenEvent('generator', 'kubernetes');
             },
